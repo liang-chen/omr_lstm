@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from bs4 import BeautifulSoup
 import matplotlib.image as mpimg
 import numpy as np
-import cv2
+#import cv2
 from music21 import *
 import random
 import os
@@ -591,7 +591,7 @@ def match_score2prim(score,primlist,stafflist,barlist,myimg):
 def generate_label(num):
 	for i in range(num):
 		pagenum = i
-		print "Label page num",pagenum,"\n"
+		print "Label page num",pagenum
 		infile = "./meas/"+"mono_44_"+str(pagenum)
 		#read svg file and assemble
 		svg_file = infile + ".svg"
