@@ -90,7 +90,7 @@ def musescore_to_svg(filename):
 
 def generate_score_files(num):
 	for i in range(num):
-		print "Generate page num",i,"\n"
+		print "Generate page num",i
 		datadir = "./meas/"
 		if not os.path.exists(datadir):
 			os.makedirs(datadir)
