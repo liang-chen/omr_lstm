@@ -1,0 +1,13 @@
+Dependent python pakege
+* music21
+* BeautifulSoup
+* cairosvg
+* matplotlib
+* numpy
+
+Dependent software
+* MuseScore 2
+
+To run:
+# to generate 10 measures
+python synthesize_score.py 10
