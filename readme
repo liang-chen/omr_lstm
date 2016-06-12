@@ -1,11 +1,11 @@
-Dependant python pakege
+Dependent python pakege
 * music21
 * BeautifulSoup
 * cairosvg
 * matplotlib
 * numpy
 
-Dependant software
+Dependent software
 * MuseScore 2
 
 To run:
