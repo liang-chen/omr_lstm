@@ -1,5 +1,5 @@
 
-from globv import data_path
+from globv import data_path, const_rows, const_cols
 import cv2
 
 
@@ -12,26 +12,41 @@ class rhythmMap(object):
         self._label = []
 
     def read_image(self):
-        self._image = cv2.imread(data_path + self._image_name, 0)
+        tmp = cv2.imread(data_path + self._image_name, 0)
+        (rows, cols) = tmp.shape
+
+        #use constant width and height
+        ratio = const_rows/float(rows)
+        tmp = cv2.resize(tmp, (0, 0), fx=ratio, fy=ratio)
+        cols = int(cols*ratio)
+        if cols > const_cols:
+            self._image = tmp[:,0:int(const_cols)]
+        else:
+            pad = int(const_cols) - cols
+            self._image = cv2.copyMakeBorder(tmp, top = 0, bottom = 0, left= pad, right = 0, borderType= cv2.BORDER_CONSTANT, value=255 )
+            for l in self._label:
+                l[1] += pad
+                l[2] += pad
 
     def read_label(self):
         with open(data_path + self._label_name, "r") as file:
             for line in file:
                 temp = [int(x) for x in line.strip().split()]
-                self._label.append(tuple(temp))
+                self._label.append(temp)
 
     def load(self):
-        self.read_image()
         self.read_label()
+        self.read_image()
 
     def show(self):
         img = cv2.cvtColor(self._image, cv2.COLOR_GRAY2RGB)
         (rows, cols) = self._image.shape
         font = cv2.FONT_HERSHEY_SIMPLEX
-        for t in self._label:
-            rhythm = t[0]
-            start = t[1]
-            end = t[2]
+        print rows, cols
+        for l in self._label:
+            rhythm = l[0]
+            start = l[1]
+            end = l[2]
             cv2.rectangle(img, (start - 2, 1), (end + 2, rows - 1), (0, 0, 255), 2)
             cv2.putText(img, str(rhythm), (start - 10, 12), font, 0.3, (0, 0, 255), 1)
 
