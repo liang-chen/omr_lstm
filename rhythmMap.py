@@ -55,4 +55,10 @@ class rhythmMap(object):
         cv2.waitKey(0)
 
     def slice(self, start, end):
-        return self._image[:, start:end]
+        label = 0
+        for l in self._label:
+            if (start >= l[1] and start <= l[2]) or (end > l[1] and end < l[2]):
+                label = l[0]
+                break
+
+        return self._image[:, start:end], label
