@@ -1,7 +1,7 @@
 
 from globv import data_path, const_rows, const_cols
 import cv2
-
+import numpy as np
 
 class rhythmMap(object):
 
@@ -10,8 +10,9 @@ class rhythmMap(object):
         self._label_name = label
         self._image = None
         self._label = []
+        self._load()
 
-    def read_image(self):
+    def _read_image(self):
         tmp = cv2.imread(data_path + self._image_name, 0)
         (rows, cols) = tmp.shape
 
@@ -28,21 +29,21 @@ class rhythmMap(object):
                 l[1] += pad
                 l[2] += pad
 
-    def read_label(self):
+    def _read_label(self):
         with open(data_path + self._label_name, "r") as file:
             for line in file:
                 temp = [int(x) for x in line.strip().split()]
                 self._label.append(temp)
 
-    def load(self):
-        self.read_label()
-        self.read_image()
+    def _load(self):
+        self._read_label()
+        self._read_image()
 
     def show(self):
         img = cv2.cvtColor(self._image, cv2.COLOR_GRAY2RGB)
         (rows, cols) = self._image.shape
         font = cv2.FONT_HERSHEY_SIMPLEX
-        print rows, cols
+        #print rows, cols
         for l in self._label:
             rhythm = l[0]
             start = l[1]
@@ -52,3 +53,6 @@ class rhythmMap(object):
 
         cv2.imshow("rhythm map", img)
         cv2.waitKey(0)
+
+    def slice(self, start, end):
+        return self._image[:, start:end]
