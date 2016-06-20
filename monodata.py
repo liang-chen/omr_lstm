@@ -9,9 +9,12 @@ class mono(object):
         self._frame_len = frame_len
         self._hop = hop_size
 
-    def _load_sample(self, rmap):
+    def _load_sample(self, rmap, one_hot):
         sample = np.empty((0, int(self._frame_len*const_rows)), dtype = 'float32')
-        label = np.empty((1, 0), dtype='int16')
+        if one_hot == 0:
+            label = np.empty((1, 0), dtype='int16')
+        else:
+            label = np.empty((0, label_num), dtype='int16')
         i = 0
 
         while True:
@@ -21,11 +24,16 @@ class mono(object):
                 break
             data, lab = rmap.slice(start, end)
             sample = np.vstack((sample, np.reshape(data, [1, -1])))
-            label = np.append(label, lab)
+            if one_hot == 0:
+                label = np.append(label, lab)
+            else:
+                temp = np.zeros((1, label_num), dtype='int16')
+                temp[0, lab] = 1
+                label = np.vstack((label, temp))
             i += self._hop
         return sample, label
 
-    def load_data(self):
+    def load_data(self, one_hot = 0):
         X = None
         Y = None
         testX = None
@@ -36,7 +44,7 @@ class mono(object):
             for line in file:
                 [img_name, label_name] = line.strip().split()
                 rmap = rhythmMap(img_name, label_name)
-                sample, label = self._load_sample(rmap)
+                sample, label = self._load_sample(rmap, one_hot)
                 if X is None:
                     X = sample[np.newaxis,...]
                 else:
@@ -52,7 +60,7 @@ class mono(object):
             for line in file:
                 [img_name, label_name] = line.strip().split()
                 rmap = rhythmMap(img_name, label_name)
-                sample, label = self._load_sample(rmap)
+                sample, label = self._load_sample(rmap, one_hot)
                 if testX is None:
                     testX = sample[np.newaxis,...]
                 else:
