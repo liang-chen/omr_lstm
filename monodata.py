@@ -10,24 +10,26 @@ class mono(object):
         self._hop = hop_size
 
     def _load_sample(self, rmap):
-        sample = np.empty((0, const_rows, self._frame_len), dtype = 'float32')
-        label = np.empty((0, label_num), dtype = 'float32')
+        sample = np.empty((0, int(self._frame_len*const_rows)), dtype = 'float32')
+        label = np.empty((1, 0), dtype='int16')
         i = 0
+
         while True:
             start = i
-            end = i + self._hop
-            if end >= const_cols:
+            end = i + self._frame_len
+            if end > const_cols:
                 break
             data, lab = rmap.slice(start, end)
-            sample = np.vstack([sample, ])
+            sample = np.vstack((sample, np.reshape(data, [1, -1])))
             label = np.append(label, lab)
+            i += self._hop
         return sample, label
 
     def load_data(self):
-        X = np.empty((0, const_rows, self._frame_len), dtype = 'float32')
-        Y = np.empty((0, const_rows, label_num), dtype = 'float32')
-        testX = np.empty((0, const_rows, self._frame_len), dtype = 'float32')
-        testY = np.empty((0, const_rows, label_num), dtype = 'float32')
+        X = None
+        Y = None
+        testX = None
+        testY = None
 
         #load training data
         with open("train.txt", "r") as file:
@@ -35,8 +37,15 @@ class mono(object):
                 [img_name, label_name] = line.strip().split()
                 rmap = rhythmMap(img_name, label_name)
                 sample, label = self._load_sample(rmap)
-                X = np.append(X, sample, axis = 0)
-                Y = np.append(Y, label)
+                if X is None:
+                    X = sample[np.newaxis,...]
+                else:
+                    X = np.vstack([X, sample[np.newaxis,...]])
+
+                if Y is None:
+                    Y = label[np.newaxis, ...]
+                else:
+                    Y = np.vstack((Y, label[np.newaxis, ...]))
 
         #load testing data
         with open("test.txt", "r") as file:
@@ -44,7 +53,14 @@ class mono(object):
                 [img_name, label_name] = line.strip().split()
                 rmap = rhythmMap(img_name, label_name)
                 sample, label = self._load_sample(rmap)
-                testX = np.append(X, sample, axis=0)
-                testY = np.append(Y, label)
+                if testX is None:
+                    testX = sample[np.newaxis,...]
+                else:
+                    testX = np.vstack([testX, sample[np.newaxis, ...]])
+
+                if testY is None:
+                    testY = label[np.newaxis, ...]
+                else:
+                    testY = np.vstack((testY, label[np.newaxis, ...]))
 
         return X,Y,testX,testY
