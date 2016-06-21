@@ -87,10 +87,15 @@ if __name__ == '__main__':
     saver = tf.train.Saver()
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
-    for epoch in range(100):#10
-        for run in range(10):#100
-            print run
-            indices = np.random.randint(0, nsamples, size = 100)
+
+    start = 0
+    for epoch in range(100):
+        for run in range(100):
+            if start + 10 > nsamples:
+                start = 0
+            indices = np.array(range(start, start+10))
+            #print indices
+            start += 10
             batchX = X[indices, :, :]
             batchY = Y[indices, :, :]
             sess.run(model.optimize, {
