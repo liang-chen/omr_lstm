@@ -1,5 +1,7 @@
 
-data_path = "data/"
+data_path = 'data/'
+
+model_path = 'model/'
 
 const_rows = 60.0
 
