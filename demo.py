@@ -32,7 +32,7 @@ class SequenceLabelling:
     @lazy_property
     def prediction(self):
         # Recurrent network.
-        network = rnn_cell.GRUCell(self._num_hidden)
+        network = rnn_cell.LSTMCell(self._num_hidden)
         network = rnn_cell.DropoutWrapper(
             network, output_keep_prob=self.dropout)
         network = rnn_cell.MultiRNNCell([network] * self._num_layers)
@@ -56,8 +56,8 @@ class SequenceLabelling:
 
     @lazy_property
     def optimize(self):
-        learning_rate = 0.003
-        optimizer = tf.train.RMSPropOptimizer(learning_rate)
+        learning_rate = 0.01
+        optimizer = tf.train.AdagradOptimizer(learning_rate)
         return optimizer.minimize(self.cost)
 
     @lazy_property
@@ -76,7 +76,7 @@ class SequenceLabelling:
 if __name__ == '__main__':
     m = mono(1,1) #frame length, hop size
     X, Y , testX, testY = m.load_data(one_hot=1)
-    nsampls, length, image_size = X.shape
+    nsamples, length, image_size = X.shape
     num_classes = Y.shape[2]
     data = tf.placeholder(tf.float32, [None, length, image_size])
     target = tf.placeholder(tf.float32, [None, length, num_classes])
@@ -85,13 +85,15 @@ if __name__ == '__main__':
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
     for epoch in range(10):
-        for _ in range(100):
-
-            indices = np.random.randint(0, nsampls, size = 10)
+        for run in range(100):
+            print run
+            indices = np.random.randint(0, nsamples, size = 10)
             batchX = X[indices, :, :]
-            batchY = Y[indices, :]
+            batchY = Y[indices, :, :]
+            print batchX.shape
+            print batchY.shape
             sess.run(model.optimize, {
                 data: batchX, target: batchY, dropout: 0.5})
         error = sess.run(model.error, {
-            data: testX, target: testY, dropout: 1})
+            data: testX, target: testY, dropout: 0.5})
         print('Epoch {:2d} error {:3.1f}%'.format(epoch + 1, 100 * error))
