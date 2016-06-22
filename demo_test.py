@@ -26,5 +26,15 @@ if __name__ == '__main__':
             data: testX[0:1,:,:], target: testY[0:1,:,:], dropout: 0.5})
 
     prob = tf.transpose(predict_prob[0,:,:])
-    rp = rhythmParser(prob)
+
+    print prob
+
+    predict_label = sess.run(model.predict_label, {
+        data: testX[0:1, :, :], target: testY[0:1, :, :], dropout: 0.5})
+
+    print predict_label
+
+    with sess.as_default():
+        prob_ndarray = prob.eval()
+    rp = rhythmParser(prob_ndarray)
     print rp.parse()

@@ -22,25 +22,25 @@ class rhythmParser(object):
 
     def _create_states(self):
         states = []
-        for t in xrange(label_num+1):
+        for t in xrange(label_num):
             states.append(rhythmState(0, "gap", 0, t))
 
-        for r in xrange(1, label_num+1):
+        for r in xrange(1, label_num):
             for i in xrange(1, min_note_frames+1):
-                for t in xrange(r, label_num+1):
+                for t in xrange(r, label_num):
                     states.append(rhythmState(r, "note", i, t))
 
         return states
 
     def _is_transition_okay(self, cur, next):
-        if cur.type == "gap" and next.type == "gap":
+        if cur.type == "gap" and next.type == "gap" and cur.total == next.total:
             return True
         elif cur.type == "gap" and next.type == "note" and \
             cur.total + next.rhythm == next.total and \
             next.index == 1:
             return True
         elif cur.type == "note" and next.type == "gap" and \
-            cur.total == next.total:
+            cur.total == next.total and cur.index == min_note_frames:
             return True
         elif cur.type == "note" and next.type == "note" and \
             cur.total == next.total and \
@@ -73,7 +73,7 @@ class rhythmParser(object):
                         self._prev[ii][j+1] = i
 
         #backward pass
-        cur_i = label_num
+        cur_i = label_num - 1
         rhythms = []
         for j in xrange(self._cols - 1, 1, -1):
             s = self._states[cur_i]
