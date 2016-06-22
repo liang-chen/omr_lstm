@@ -2,8 +2,8 @@
 import tensorflow as tf
 from monodata import mono
 from globv import model_path
+from rhythmParser import rhythmParser
 from demo_train import SequenceLabelling
-
 
 if __name__ == '__main__':
     m = mono(1,1) #frame length, hop size
@@ -21,6 +21,20 @@ if __name__ == '__main__':
 
     ckpt = tf.train.get_checkpoint_state(model_path)
     saver.restore(sess, ckpt.model_checkpoint_path)
-    error = sess.run(model.error, {
-        data: testX, target: testY, dropout: 0.5})
-    print('testing error {:3.1f}%'.format(100 * error))
+    #print testY[0:10,:,:]
+    predict_prob = sess.run(model.prediction, {
+            data: testX[0:1,:,:], target: testY[0:1,:,:], dropout: 0.5})
+
+    prob = tf.transpose(predict_prob[0,:,:])
+
+    print prob
+
+    predict_label = sess.run(model.predict_label, {
+        data: testX[0:1, :, :], target: testY[0:1, :, :], dropout: 0.5})
+
+    print predict_label
+
+    with sess.as_default():
+        prob_ndarray = prob.eval()
+    rp = rhythmParser(prob_ndarray)
+    print rp.parse()

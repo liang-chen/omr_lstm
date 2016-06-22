@@ -1,7 +1,7 @@
 
 from globv import data_path, const_rows, const_cols
 import cv2
-import numpy as np
+
 
 class rhythmMap(object):
 
