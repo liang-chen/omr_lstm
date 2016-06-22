@@ -56,6 +56,11 @@ class SequenceLabelling:
         return cross_entropy
 
     @lazy_property
+    def predict_label(self):
+        label = tf.argmax(self.prediction, 2)
+        return label
+
+    @lazy_property
     def optimize(self):
         learning_rate = 0.01
         optimizer = tf.train.AdagradOptimizer(learning_rate)
@@ -103,6 +108,8 @@ if __name__ == '__main__':
         error = sess.run(model.error, {
             data: testX, target: testY, dropout: 0.5})
         print('Epoch {:2d} error {:3.1f}%'.format(epoch + 1, 100 * error))
-        if epoch %10 == 0:
+        if epoch % 10 == 0:
             saver.save(sess, model_path + 'model.ckpt',
                     global_step=epoch + 1)
+
+    saver.save(sess, model_path + 'model_final.ckpt')

@@ -9,3 +9,5 @@ const_cols = 200.0
 
 # 16 + 1 labels
 label_num = 17
+
+min_note_frames = 3
