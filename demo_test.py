@@ -23,8 +23,8 @@ if __name__ == '__main__':
     saver.restore(sess, ckpt.model_checkpoint_path)
     #print testY[0:10,:,:]
     predict_prob = sess.run(model.prediction, {
-            data: testX[0:0,:,:], target: testY[0:0,:,:], dropout: 0.5})
-    print predict_prob
+            data: testX[0:1,:,:], target: testY[0:1,:,:], dropout: 0.5})
 
-    #rp = rhythmParser(predict_prob[0, :, :])
-    #print rp.parse()
+    prob = tf.transpose(predict_prob[0,:,:])
+    rp = rhythmParser(prob)
+    print rp.parse()
