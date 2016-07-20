@@ -1,5 +1,5 @@
 
-from globv import data_path, const_rows, const_cols
+from globalv import data_path, const_rows, const_cols
 import cv2
 
 

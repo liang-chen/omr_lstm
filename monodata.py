@@ -1,7 +1,8 @@
 
-from globv import const_rows, const_cols, label_num
+from globalv import const_rows, const_cols, label_num
 from rhythmMap import rhythmMap
 import numpy as np
+
 
 class mono(object):
 
