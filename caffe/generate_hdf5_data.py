@@ -38,13 +38,14 @@ while cnt < X.shape[0]:
         for i in xrange(const_cols):
             for ii in xrange(batch_train):
                 idx = i*batch_train + ii
+                print(idx)
                 data[idx] = X[cnt+ii][i][np.newaxis, ..., np.newaxis]
                 label[idx] = np.where(Y[cnt+ii][i] == 1)[0]
                 clip_markers[idx] = 0 if i == 0 else 1
-
-
-        f['label'] = data
-        f['data'] = label
+        print("here")
+        print(data.shape)
+        f['label'] = label
+        f['data'] = data
         f['clip_markers'] = clip_markers
 
     with open(train_fn, "a") as f:
@@ -57,7 +58,7 @@ cnt = 0
 while cnt < testX.shape[0]:
     h5_fn = str(cnt) + "_test" + ".h5"
     with h5py.File(h5_fn, 'w') as f:
-        data = np.empty(shape_train)
+        data = np.empty(shape_test)
         label = np.empty([N_test, ])
         clip_markers = np.empty([N_test, ])
 
@@ -67,8 +68,8 @@ while cnt < testX.shape[0]:
                 data[idx] = testX[cnt + ii][i][np.newaxis, ..., np.newaxis]
                 label[idx] = np.where(testY[cnt + ii][i] == 1)[0]
                 clip_markers[idx] = 0 if i == 0 else 1
-        f['label'] = data
-        f['data'] = label
+        f['label'] = label
+        f['data'] = data
         f['clip_markers'] = clip_markers
 
     with open(test_fn, "a") as f:

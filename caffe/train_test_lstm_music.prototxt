@@ -1,3 +1,4 @@
+
 name: "lstm_music"
 layer {
   name: "data"
@@ -6,7 +7,7 @@ layer {
   top: "label"
   top: "clip_markers"
   hdf5_data_param {
-     source: "train_music.txt"
+     source: "/N/dc2/projects/omrdl/data/train_music.txt"
      batch_size: 10
   }
   include: { phase: TRAIN }
@@ -18,7 +19,7 @@ layer {
   top: "label"
   top: "clip_markers"
   hdf5_data_param {
-     source: "test_music.txt"
+     source: "/N/dc2/projects/omrdl/data/test_music.txt"
      batch_size: 3
   }
   include: { phase: TEST stage: "test-on-test" }
@@ -40,8 +41,8 @@ layer{
 layer{
   name: "reshape-data"
   type: "Reshape"
-  bottom: "fc6"
-  top: "fc6-reshape"
+  bottom: "data"
+  top: "data-reshape"
   reshape_param{
     shape{
       dim: 200
@@ -106,7 +107,7 @@ layer{
 layer {
   name: "lstm1"
   type: "LSTM"
-  bottom: "fc6-reshape"
+  bottom: "data-reshape"
   bottom: "reshape-cm"
   top: "lstm1"
   recurrent_param {
