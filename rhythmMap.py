@@ -58,8 +58,9 @@ class rhythmMap(object):
         label = 0
 
         for l in self._label:
-            overlap = max(0, min(end, l[2]) - min(start, l[1]))
-            if 2*overlap > min(end-start, l[2] - l[1]):
+            overlap = max(0, min(end, l[2]) - max(start, l[1]))
+            #print overlap, 0.8*min(end-start, l[2] - l[1])
+            if overlap > 0.5*min(end-start, l[2] - l[1]):
                 label = l[0]
                 break
 
