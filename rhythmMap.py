@@ -56,9 +56,16 @@ class rhythmMap(object):
 
     def slice(self, start, end):
         label = 0
+
         for l in self._label:
-            if (start >= l[1] and start <= l[2]) or (end > l[1] and end < l[2]):
+            overlap = max(0, min(end, l[2]) - min(start, l[1]))
+            if 2*overlap > min(end-start, l[2] - l[1]):
                 label = l[0]
                 break
+
+            # if (start >= l[1] and start <= l[2]) or \
+            #         (end > l[1] and end < l[2]):
+            #     label = l[0]
+            #     break
 
         return self._image[:, start:end], label

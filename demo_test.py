@@ -1,7 +1,7 @@
 
 import tensorflow as tf
 from monodata import mono
-from globv import model_path
+from globalv import model_path
 from rhythmParser import rhythmParser
 from demo_train import SequenceLabelling
 

@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.models.rnn import rnn_cell
 from tensorflow.models.rnn import rnn
 from monodata import mono
-from globv import model_path
+from globalv import model_path
 import numpy as np
 
 def lazy_property(function):

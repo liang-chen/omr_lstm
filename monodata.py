@@ -5,7 +5,6 @@ import numpy as np
 
 
 class mono(object):
-
     def __init__(self, frame_len, hop_size):
         self._frame_len = frame_len
         self._hop = hop_size
@@ -61,7 +60,7 @@ class mono(object):
             for line in file:
                 [img_name, label_name] = line.strip().split()
                 rmap = rhythmMap(img_name, label_name)
-                sample, label = self._load_sample(rmap, one_hot)
+                sample, label  = self._load_sample(rmap, one_hot)
                 if testX is None:
                     testX = sample[np.newaxis,...]
                 else:
