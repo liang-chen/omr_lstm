@@ -10,7 +10,7 @@ frame_length = 10
 hop_size = 5
 nframes = (const_cols - frame_length)/hop_size + 1
 m = mono(frame_length, hop_size) #frame length, hop size
-X, Y , testX, testY = m.load_data(one_hot=1)
+X, Y , testX, testY = m.load_data()
 
 batch_train = 10
 N_train = batch_train*nframes

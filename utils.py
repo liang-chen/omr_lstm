@@ -1,6 +1,6 @@
 
 import os
-from globv import data_path
+from globalv import data_path
 
 
 def label_name(img_name):
@@ -11,7 +11,8 @@ def label_name(img_name):
     :return:
     :rtype:
     """
-    return img_name[:-5] + "range.txt"
+    return img_name[:-4] + ".txt"
+
 
 def data_split():
     """
