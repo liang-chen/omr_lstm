@@ -10,7 +10,7 @@ frame_length = 10
 hop_size = 5
 nframes = (const_cols - frame_length)/hop_size + 1
 m = mono(frame_length, hop_size) #frame length, hop size
-X, Y , testX, testY = m.load_data()
+X, rhythmY ,pitchY, testX, testrhythmY, testpitchY = m.load_data()
 
 batch_train = 10
 N_train = batch_train*nframes
@@ -36,19 +36,19 @@ while cnt < X.shape[0]:
     h5_fn = str(cnt) + "_train" + ".h5"
     with h5py.File(h5_fn, 'w') as f:
         data = np.empty(shape_train)
-        label = np.empty([N_train, ])
+        rhythm = np.empty([N_train, ])
+        pitch = np.empty([N_train, ])
         clip_markers = np.empty([N_train, ])
 
         for i in xrange(nframes):
             for ii in xrange(batch_train):
                 idx = i*batch_train + ii
-                print(idx)
                 data[idx] = X[cnt+ii][i].reshape(1, const_rows, frame_length)
-                label[idx] = np.where(Y[cnt+ii][i] == 1)[0]
+                rhythm[idx] = rhythmY[cnt+ii][i]
+                pitch[idx] = pitchY[cnt + ii][i]
                 clip_markers[idx] = 0 if i == 0 else 1
-        print("here")
-        print(data.shape)
-        f['label'] = label
+        f['rhythm'] = rhythm
+        f['pitch'] = pitch
         f['data'] = data
         f['clip_markers'] = clip_markers
 
@@ -63,16 +63,19 @@ while cnt < testX.shape[0]:
     h5_fn = str(cnt) + "_test" + ".h5"
     with h5py.File(h5_fn, 'w') as f:
         data = np.empty(shape_test)
-        label = np.empty([N_test, ])
+        rhythm = np.empty([N_test, ])
+        pitch = np.empty([N_test, ])
         clip_markers = np.empty([N_test, ])
 
         for i in xrange(nframes):
             for ii in xrange(batch_test):
                 idx = i * batch_test + ii
                 data[idx] = testX[cnt + ii][i].reshape(1, const_rows, frame_length)
-                label[idx] = np.where(testY[cnt + ii][i] == 1)[0]
+                rhythm[idx] = testrhythmY[cnt + ii][i]
+                pitch[idx] = testpitchY[cnt + ii][i]
                 clip_markers[idx] = 0 if i == 0 else 1
-        f['label'] = label
+        f['rhythm'] = rhythm
+        f['pitch'] = pitch
         f['data'] = data
         f['clip_markers'] = clip_markers
 
