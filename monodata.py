@@ -1,6 +1,5 @@
 
 from globalv import const_rows, const_cols, rhythm_label_num, pitch_label_num, pitch_dict, pitch_shift
-#from rhythmMap import rhythmMap
 from sequenceLabelGenerator import sequenceLabelGenerator
 import numpy as np
 
@@ -79,6 +78,7 @@ class mono(object):
             for line in file:
                 print cnt_train
                 cnt_train += 1
+
                 [img_name, label_name] = line.strip().split()
                 labelG = sequenceLabelGenerator(img_name, label_name)
                 sample, rhythmLabel, pitchLabel = self._load_sample(labelG)
@@ -97,11 +97,13 @@ class mono(object):
                 else:
                     pitchY = np.vstack((pitchY, pitchLabel[np.newaxis, ...]))
 
+
         #load testing data
         with open("test.txt", "r") as file:
             for line in file:
                 print cnt_test
                 cnt_test += 1
+
                 [img_name, label_name] = line.strip().split()
                 labelG = sequenceLabelGenerator(img_name, label_name)
                 sample, rhythmLabel, pitchLabel = self._load_sample(labelG)

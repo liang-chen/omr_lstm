@@ -3,7 +3,7 @@ data_path = 'data_new/'
 
 model_path = 'model/'
 
-const_rows = 60
+const_rows = 80
 
 const_cols = 200
 

@@ -15,7 +15,6 @@ class sequenceLabelGenerator(object):
     def _read_image(self):
         tmp = cv2.imread(data_path + self._image_name, 0)
         (rows, cols) = tmp.shape
-
         #use constant width and height
         ratio = const_rows/float(rows)
         tmp = cv2.resize(tmp, (0, 0), fx=ratio, fy=ratio)
