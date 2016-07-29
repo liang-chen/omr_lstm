@@ -1,16 +1,18 @@
 
-#Dependencies
-*For score generation
-** music21
-** BeautifulSoup
-** cairosvg
-** matplotlib
-** numpy
-** MuseScore 2
+Optical Music Recognition Using Hybrid HMM-RNN
 
-*For data preparation
-** h5py
-** OpenCV
+##Dependencies
+1. For score generation
+   * music21
+   * BeautifulSoup
+   * cairosvg
+   * matplotlib
+   * numpy
+   * MuseScore 2
 
-*For deep learning
-** Caffe
+2. For data preparation
+   * h5py
+   * OpenCV
+
+3. For deep learning
+   * Caffe
