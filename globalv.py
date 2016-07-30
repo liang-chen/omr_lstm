@@ -25,6 +25,6 @@ pitch_dict = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
 
 pitch_inverse_dict = {0: 'C', 2: 'D', 4: 'E', 5: 'F', 5: 'G', 7: 'A', 11: 'B'}
 
-pitch_shift = 62
+pitch_shift = 65 # pitch ranges from 66 - 96 (31 different ones)
 
-pitch_max_num = 30 #pitch label ranges from 0 to num - 1, 0 represents no pitch
+pitch_max_num = 32 #pitch label ranges from 0 to num - 1, 0 represents no pitch
