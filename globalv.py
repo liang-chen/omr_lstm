@@ -23,7 +23,7 @@ min_note_frames = 1
 
 pitch_dict = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
 
-pitch_inverse_dict = {0: 'C', 2: 'D', 4: 'E', 5: 'F', 5: 'G', 7: 'A', 11: 'B'}
+pitch_inverse_dict = {0: 'C', 2: 'D', 4: 'E', 5: 'F', 7: 'G', 9: 'A', 11: 'B'}
 
 pitch_shift = 65 # pitch ranges from 66 - 96 (31 different ones)
 

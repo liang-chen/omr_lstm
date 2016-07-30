@@ -12,12 +12,15 @@ for i in xrange(3000):
         pitch_prob = np.empty((0, pitch_max_num), dtype = 'float32')
         rhythm_prob = np.empty((0, rhythm_label_num), dtype = 'float32')
         for k in xrange(39):
+            fpitch.readline()
             line_pitch = fpitch.readline()
+
+            frhythm.readline()
             line_rhythm = frhythm.readline()
             pitch_prob = np.vstack((pitch_prob, np.array([float(f) for f in line_pitch.strip().split()])))
             rhythm_prob = np.vstack((rhythm_prob, np.array([float(f) for f in line_rhythm.strip().split()])))
-        #if i == 0:
-            #continue
+        if i < 4:
+            continue
         parser = scoreParser(pitch_prob, rhythm_prob)
         rhythms, pitches = parser.parse()
         print rhythms

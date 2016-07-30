@@ -34,7 +34,7 @@ class scoreParser(object):
             for i in xrange(1, min_note_frames+1):
                 for p in xrange(pitch_max_num):
                     for t in xrange(r, dur_max_num + 1):
-                        states.append(scoreState(r, p, "note", i, t)) #notes and rests
+                        states.append(scoreState(r, p, "note", i, t)) #actually this type corresponds to both notes and rests
 
         return states
 
@@ -50,6 +50,7 @@ class scoreParser(object):
             cur.total == next.total and cur.index == min_note_frames:
             return True
         elif cur.type == "note" and next.type == "note" and \
+            cur.rhythm == next.rhythm and \
             cur.total == next.total and \
             cur.pitch == next.pitch and \
             (cur.index + 1 == next.index or \
@@ -63,8 +64,11 @@ class scoreParser(object):
         return False
 
     def _pitch_inverse_index(self, index):
+        if index == 0:
+            return "None"
         octave = (index + pitch_shift)/12
         pitch_class = index + pitch_shift - 12*octave
+
         if pitch_class in pitch_inverse_dict:
             return pitch_inverse_dict[pitch_class] + str(octave-2)
         elif pitch_class - 1 in pitch_inverse_dict:
@@ -106,14 +110,25 @@ class scoreParser(object):
         cur_i = dur_max_num # the last gap state
         rhythms = []
         pitches = []
+        total = []
+        print "total = ", self._states[cur_i].total
         for j in xrange(self._cols - 1, 1, -1):
             s = self._states[cur_i]
+
+            # if s.type == "note":
+            #     rhythms = [s.rhythm] + rhythms
+            #     pitches = [s.pitch] + pitches
+            #     total = [s.total] + total
+
             if s.type == "note" and len(rhythms) == 0:
                 rhythms = [s.rhythm] + rhythms
                 pitches = [s.pitch] + pitches
-            if s.type == "note" and (s.rhythm != rhythms[0] or s.pitch != pitches[0]):
+                total = [s.total] + total
+            if s.type == "note" and (s.rhythm != rhythms[0] or s.pitch != pitches[0] or s.total != total[0]):
                 rhythms = [s.rhythm] + rhythms
                 pitches = [s.pitch] + pitches
+                total = [s.total] + total
             cur_i = self._prev[cur_i][j]
         pitches = [self._pitch_inverse_index(p) for p in pitches]
+        print "total: ", total
         return rhythms, pitches
