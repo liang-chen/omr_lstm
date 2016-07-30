@@ -1,6 +1,7 @@
 
-from globv import label_num, min_note_frames
+from globalv import label_num, min_note_frames
 from math import log, isinf
+
 
 class rhythmState(object):
     def __init__(self, rhythm, type, index, total):
