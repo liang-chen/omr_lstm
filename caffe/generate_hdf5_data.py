@@ -39,6 +39,7 @@ while cnt < X.shape[0]:
         rhythm = np.empty(N_train)
         pitch = np.empty(N_train)
         clip_markers = np.empty(N_train)
+        sample_weights = np.empty(N_train)
 
         for i in xrange(nframes):
             for ii in xrange(batch_train):
@@ -55,10 +56,12 @@ while cnt < X.shape[0]:
                 #temp[pitchY[cnt + ii][i]] = 1
                 pitch[idx] = pitchY[cnt + ii][i]
                 clip_markers[idx] = 0 if i == 0 else 1
+                sample_weights[idx] = 0.1 if rhythm[idx] == 0 else 1
         f['rhythm'] = rhythm
         f['pitch'] = pitch
         f['data'] = data
         f['clip_markers'] = clip_markers
+        f['sample_weights'] = sample_weights
 
     with open(train_fn, "a") as f:
         print(DIR + h5_fn, file = f)
@@ -74,6 +77,7 @@ while cnt < testX.shape[0]:
         rhythm = np.empty(N_test)
         pitch = np.empty(N_test)
         clip_markers = np.empty(N_test)
+        sample_weights = np.empty(N_test)
 
         for i in xrange(nframes):
             for ii in xrange(batch_test):
@@ -90,10 +94,12 @@ while cnt < testX.shape[0]:
                 #temp[testpitchY[cnt + ii][i]] = 1
                 pitch[idx] = testpitchY[cnt + ii][i]
                 clip_markers[idx] = 0 if i == 0 else 1
+                sample_weights[idx] = 0.1 if rhythm[idx] == 0 else 1
         f['rhythm'] = rhythm
         f['pitch'] = pitch
         f['data'] = data
         f['clip_markers'] = clip_markers
+        f['sample_weights'] = sample_weights
 
     with open(test_fn, "a") as f:
         print(DIR + h5_fn, file = f)
