@@ -96,6 +96,7 @@ class mono(object):
                     pitchY = pitchLabel[np.newaxis, ...]
                 else:
                     pitchY = np.vstack((pitchY, pitchLabel[np.newaxis, ...]))
+                break
 
 
         #load testing data
@@ -121,6 +122,7 @@ class mono(object):
                     testpitchY = pitchLabel[np.newaxis, ...]
                 else:
                     testpitchY = np.vstack((testpitchY, pitchLabel[np.newaxis, ...]))
+                break
 
         print "Data loading done!"
 

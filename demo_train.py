@@ -20,9 +20,10 @@ def lazy_property(function):
 
 class SequenceLabelling:
 
-    def __init__(self, data, target, dropout, num_hidden=200, num_layers=3):
+    def __init__(self, data, target_rhythm, target_pitch, dropout, num_hidden=200, num_layers=3):
         self.data = data
-        self.target = target
+        self.target_rhythm = target_rhythm
+        self.target_pitch = target_pitch
         self.dropout = dropout
         self._num_hidden = num_hidden
         self._num_layers = num_layers
@@ -80,14 +81,20 @@ class SequenceLabelling:
 
 
 if __name__ == '__main__':
-    m = mono(1,1) #frame length, hop size
-    X, Y , testX, testY = m.load_data(one_hot=1)
+    #m = mono(1,1) #frame length, hop size
+    frame_length = 10
+    hop_size = 5
+    m = mono(frame_length, hop_size)  # frame length, hop size
+    X, rhythmY, pitchY, testX, testrhythmY, testpitchY = m.load_data()
+
     nsamples, length, image_size = X.shape
-    num_classes = Y.shape[2]
+    num_rhythm_classes = len(np.unique(rhythmY))
+    num_pitch_classes = len(np.unique(pitchY))
     data = tf.placeholder(tf.float32, [None, length, image_size])
-    target = tf.placeholder(tf.float32, [None, length, num_classes])
+    target_rhythm = tf.placeholder(tf.float32, [None, length, num_rhythm_classes])
+    target_pitch = tf.placeholder(tf.float32, [None, length, num_pitch_classes])
     dropout = tf.placeholder(tf.float32)
-    model = SequenceLabelling(data, target, dropout)
+    model = SequenceLabelling(data, target_rhythm, target_pitch, dropout)
 
     saver = tf.train.Saver()
     sess = tf.Session()
@@ -102,11 +109,13 @@ if __name__ == '__main__':
             #print indices
             start += 10
             batchX = X[indices, :, :]
-            batchY = Y[indices, :, :]
+            batchrhythmY = rhythmY[indices, :, :]
+            batchpitchY = pitchY[indices, :, :]
+
             sess.run(model.optimize, {
-                data: batchX, target: batchY, dropout: 0.5})
+                data: batchX, target_rhythm: batchrhythmY, target_pitch: batchpitchY, dropout: 0.5})
         error = sess.run(model.error, {
-            data: testX, target: testY, dropout: 0.5})
+            data: testX, target_rhythm: testrhythmY, target_pitch: testpitchY, dropout: 0.5})
         print('Epoch {:2d} error {:3.1f}%'.format(epoch + 1, 100 * error))
         if epoch % 10 == 0:
             saver.save(sess, model_path + 'model.ckpt',
